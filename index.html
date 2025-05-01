@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab 6</title>
+    <script src="js/angular.min.js"></script>
+    <link rel="stylesheet" href="bootstrap-5.3.3-dist/css/bootstrap.min.css">
+    <style>
+        input.ng-invalid {
+            background-image: url(image/warning.png);
+            background-position: right;
+            background-repeat: no-repeat;
+            background-size: 25px;
+        }
+    </style>
+</head>
+
+<body ng-app="myapp">
+    <!-- BÀI 1 -->
+    <div class="container my-5" ng-controller="Bai1Ctrl">
+        <div class="row mt-5">
+            <div class="col-sm-8 offset-sm-2">
+                <h1>Bài 1</h1>
+                <div class="card">
+                    <div class="card-header text-bg-primary fs-5 fw-bold">
+                        TÍNH THƯỞNG TẾT NGUYÊN ĐÁN
+                    </div>
+                    <div class="card-body">
+                        <form action="">
+                            <div class="form-group my-3">
+                                <label class="fw-bold">Họ và tên</label>
+                                <input type="text" ng-model="name" class="form-control">
+                            </div>
+                            <div class="form-group my-3">
+                                <label class="fw-bold">Lương</label>
+                                <div class="input-group">
+                                    <input type="text" ng-model="salary" class="form-control">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">VNĐ</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group my-3">
+                                <label class="fw-bold">Giới tính</label>
+                                <br>
+                                <div class="form-check form-check-inline">
+                                    <input ng-model="gender" value="Nam" class="form-check-input" type="radio"
+                                        name="gender" checked>
+                                    <label class="form-check-label" for="gender">
+                                        Nam
+                                    </label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input ng-model="gender" value="Nữ" class="form-check-input" type="radio"
+                                        name="gender">
+                                    <label class="form-check-label" for="gender">
+                                        Nữ
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group my-3">
+                                <label class="fw-bold">Độ tuổi</label>
+                                <select class="form-control" ng-model="age" ng-options="x.age for x in list_age" name=""
+                                    id="">
+                                </select>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="card-footer">
+                        Tiền thưởng: {{getBonus()}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bài 2 -->
+    <div class="container" ng-controller="Bai2Ctrl">
+        <div class="row mt-5">
+            <div class="col-sm-8 offset-sm-2">
+                <h1>Bài 2</h1>
+                <div class="card">
+                    <div class="card-header text-bg-primary fs-5 fw-bold">
+                        BÁN HÀNG GIẢI KHÁT
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-bordered">
+                            <tbody>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Hình ảnh</th>
+                                    <th>Tên hàng</th>
+                                    <th>Số lượng</th>
+                                    <th>Đơn giá</th>
+                                    <th>Thành tiền</th>
+                                </tr>
+                                <tr ng-repeat="item in list_item" ng-init="item.quantity = 0;">
+                                    <td><input type="checkbox" ng-model="item.buy"></td>
+                                    <td class="align-middle"><img src="image/food/{{item.photo}}"
+                                            style="max-width: 50px; max-height: 50px;" alt=""></td>
+                                    <td>{{item.name}}</td>
+                                    <td><input type="number" ng-model="item.quantity" ng-disabled="!item.buy"></td>
+                                    <td>{{item.price | currency}}</td>
+                                    <td>{{item.price * item.quantity | currency}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="card-footer">
+                        Tổng tiền: {{getAmount() | currency}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bài 3 -->
+    <div class="container" ng-controller="Bai1Ctrl">
+        <div class="row mt-5">
+            <div class="col-sm-8 offset-sm-2">
+                <h1>Bài 3</h1>
+                <div class="card">
+                    <div class="card-header text-bg-primary fs-5 fw-bold">
+                        TÍNH THƯỞNG TẾT NGUYÊN ĐÁN
+                    </div>
+                    <div class="card-body">
+                        <form name="frmBonus">
+                            <div class="form-group my-3">
+                                <label class="fw-bold">Họ và tên</label>
+                                <input type="text" ng-model="name" required minlength="10" class="form-control"
+                                    name="txtfullname">
+                                <label ng-show="frmBonus.txtfullname.$invalid" class="text-danger">*Chưa nhập họ và
+                                    tên</label>
+                            </div>
+                            <div class="form-group my-3">
+                                <label class="fw-bold">Lương</label>
+                                <div class="input-group">
+                                    <input type="number" ng-model="salary" min="2000000" required class="form-control"
+                                        name="txtsalary">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">VNĐ</span>
+                                    </div>
+                                </div>
+                                <label ng-show="frmBonus.txtsalary.$invalid" class="text-danger">*Lương phải trên
+                                    2.000.000 VND</label>
+                            </div>
+                            <div class="form-group my-3">
+                                <label class="fw-bold">Giới tính</label>
+                                <br>
+                                <div class="form-check form-check-inline">
+                                    <input ng-model="gender" value="Nam" class="form-check-input" type="radio"
+                                        name="gender" checked>
+                                    <label class="form-check-label" for="gender">
+                                        Nam
+                                    </label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input ng-model="gender" value="Nữ" class="form-check-input" type="radio"
+                                        name="gender">
+                                    <label class="form-check-label" for="gender">
+                                        Nữ
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group my-3">
+                                <label class="fw-bold">Độ tuổi</label>
+                                <select class="form-control" ng-model="age" ng-options="x.age for x in list_age" name=""
+                                    id="">
+                                </select>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="card-footer">
+                        Tiền thưởng: {{getBonus()}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bài 4 -->
+    <div class="container" ng-controller="Bai4Ctrl">
+        <div class="row mt-5">
+            <div class="col-sm-8 offset-sm-2">
+                <h1>Bài 4</h1>
+                <div class="card">
+                    <div class="card-header text-bg-primary fs-5 fw-bold">
+                        THÔNG TIN SINH VIÊN
+                    </div>
+                    <div class="card-body">
+                        <form name="frmsv">
+                            <div class="form-group">
+                                <label class="fw-bold">Họ và tên</label>
+                                <input type="text" class="form-control" ng-model="name" name="txtname" required
+                                    minlength="5" maxlength="50">
+                                <label class="text-danger" ng-show="frmsv.txtname.$invalid">*Bạn chưa nhập tên</label>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="fw-bold">Điểm</label>
+                                <input type="number" class="form-control" ng-model="diem" name="txtdiem" required
+                                    min="0" max="10">
+                                <label class="text-danger" ng-show="frmsv.txtdiem.$invalid">*Điểm phải từ 0 tới
+                                    10</label>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="fw-bold">Email</label>
+                                <input type="text" class="form-control" ng-model="email" name="txtemail" required
+                                    type="email" minlength="5" maxlength="50">
+                                <label class="text-danger" ng-show="frmsv.txtemail.$invalid">*Không đúng định dạng
+                                    Email</label>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="fw-bold">Số xe</label>
+                                <input type="text" class="form-control" ng-model="soxe" name="txtsoxe" required
+                                    pattern="5\d-[A-Z]\d-((\d{4})|(\d{3}\.\d{2}))">
+                                <label class="text-danger" ng-show="frmsv.txtsoxe.$invalid">*Không đúng số xe Sài
+                                    Gòn</label>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-primary">
+                            Lưu
+                        </button>
+                        <label class="fw-bold" ng-show="frmsv.$valid">Chúc mừng bạn đã nhập đúng</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Bài 5 -->
+    <div class="container my-5">
+        <div class="row mt-5">
+            <div class="col-sm-8 offset-sm-2">
+                <h1>Bài 5</h1>
+                <div class="card">
+                    <div class="card-header text-bg-primary fs-5 fw-bold">
+                        CUSTOM VALIDATION
+                    </div>
+                    <div class="card-body">
+                        <form name="frmValid">
+                            <div class="form-group">
+                                <label class="fw-bold">poly number</label>
+
+                                <input poly-number type="number" class="form-control" ng-model="number" name="txtnumber"
+                                    required>
+
+                                <label class="text-danger"
+                                    ng-show="frmValid.txtnumber.$invalid && frmValid.txtnumber.$dirty">
+                                    *Số này không chia hết cho 2 và 9
+                                </label>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-primary">
+                            Kiểm tra
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/index.js"></script>
+</body>
+
+</html>
